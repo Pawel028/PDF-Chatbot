@@ -25,6 +25,7 @@ load_dotenv(find_dotenv())
 
 openai.api_version = "2022-12-01"
 openai.api_key = os.getenv("OPENAI_API_KEY")
+print(openai.api_key)
 embeddings = OpenAIEmbeddings()
 print("embeddings done")
 
