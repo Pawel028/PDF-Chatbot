@@ -1,23 +1,28 @@
-# Use the official Python 3.11 slim image as the base
-FROM python:3.9-slim
+# Use the official slim Python 3.11 image
+FROM python:3.11-slim-bullseye
 
-# Set the working directory inside the container
+# Set working directory
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
     build-essential \
     curl \
-    ca-certificates \
+    software-properties-common \
     git \
-    tzdata \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/*
 
+# Clone your repository
 RUN git clone https://github.com/Pawel028/PDF-Chatbot.git .
 
+# Install Python dependencies
 RUN pip3 install -r requirements.txt
 
+# Expose Streamlit's default port
 EXPOSE 8501
 
+# Set a health check for the container
 HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health
 
+# Start Streamlit app
 ENTRYPOINT ["streamlit", "run", "PDF_App.py", "--server.port=8501", "--server.address=0.0.0.0"]
