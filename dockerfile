@@ -1,9 +1,16 @@
-# Use the official slim Python 3.11 image
-FROM python:3.11-slim-bullseye
+# Use official Python 3.11 slim image
+FROM python:3.11-slim
 
 # Set working directory
 WORKDIR /app
 
+# Install system dependencies needed for many Python packages
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    curl \
+    git \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
 # Clone your repository
 RUN git clone https://github.com/Pawel028/PDF-Chatbot.git .
