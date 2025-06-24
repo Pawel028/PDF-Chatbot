@@ -4,12 +4,13 @@ FROM python:3.11-slim-bullseye
 # Set the working directory inside the container
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     curl \
-    software-properties-common \
+    ca-certificates \
     git \
-    && rm -rf /var/lib/apt/lists/*
+    tzdata \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN git clone https://github.com/Pawel028/PDF-Chatbot.git .
 
