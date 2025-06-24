@@ -11,5 +11,6 @@ azure-search-documents==11.4.0
 streamlit==1.29.0
 numpy==1.26.1
 pandas
+thrift==0.16.0
 openpyxl==3.1.2
 pyhive
