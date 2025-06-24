@@ -1,0 +1,8 @@
+version: '3.8'
+
+services:
+  web:
+    image: ragimplementation.azurecr.io/pdf-application:latest
+    ports:
+      - 80:8501
+    restart: always

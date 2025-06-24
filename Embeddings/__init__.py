@@ -38,7 +38,7 @@ class classEmbdding:
 
     def find_Vectordb(self, filename):
         persist_directory = self.chroma_url+"/"+filename
-        embeddings = OpenAIEmbeddings()
+        embeddings = OpenAIEmbeddings(openai_api_key = os.getenv("openai_api_key"))
 
         vectordb = Chroma(persist_directory=persist_directory, embedding_function=embeddings)
         return vectordb
@@ -49,7 +49,7 @@ class classEmbdding:
         # openai.api_base = os.getenv('OPENAI_API_BASE', "")
         # openai.api_version = "2022-12-01"
         openai.api_key = os.getenv("OPENAI_API_KEY")
-        embeddings = OpenAIEmbeddings()
+        embeddings = OpenAIEmbeddings(openai_api_key = os.getenv("openai_api_key"))
         
         file_list_data=os.listdir(self.data_url+"/"+self.subfolder)
         for j in file_list_data:

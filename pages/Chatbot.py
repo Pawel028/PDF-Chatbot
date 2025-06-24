@@ -23,15 +23,15 @@ from langchain.chains.chat_vector_db.prompts import CONDENSE_QUESTION_PROMPT
 
 load_dotenv(find_dotenv())
 
-openai.api_version = "2022-12-01"
-openai.api_key = os.getenv("OPENAI_API_KEY")
-print(openai.api_key)
-embeddings = OpenAIEmbeddings()
-print("embeddings done")
+openai.api_version = "2020-10-01"
+
+# print(openai.api_key)
+embeddings = OpenAIEmbeddings(openai_api_key = os.getenv("openai_api_key"))
+# print("embeddings done")
 
 
 # model_name = "gpt-4"
-llm_model = OpenAI()
+llm_model = OpenAI(openai_api_key = os.getenv("openai_api_key"))
 
 
 filtered_df = pd.DataFrame()
