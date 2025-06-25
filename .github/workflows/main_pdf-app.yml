@@ -70,7 +70,7 @@ jobs:
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_AEF72E27D6FB4C0B9A314F7C13F71EF1 }}
 
       - name: 'Deploy to Azure Web App'
-        uses: azure/webapps-deploy@v3
+        uses: azure/webapps-deploy@v4
         id: deploy-to-webapp
         with:
           app-name: 'pdf-app'
