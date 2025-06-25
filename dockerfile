@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Clone your repository
 RUN git clone https://github.com/Pawel028/PDF-Chatbot.git .
 
-COPY . .
+# COPY . .
 # Install Python dependencies
 RUN pip install -r requirements.txt
 
