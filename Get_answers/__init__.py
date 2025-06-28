@@ -22,7 +22,7 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 embeddings = OpenAIEmbeddings(openai_api_key = os.getenv("openai_api_key"))
 
 class answer_obj:
-    def __init__(self, chat_history, prompt, question_prompt, llm_model, vector_db, filename):
+    def __init__(self, chat_history, prompt, question_prompt, llm_model, filename):
         self.chat_history = chat_history
         self.prompt = prompt
         self.question_prompt = question_prompt
@@ -44,19 +44,19 @@ class answer_obj:
         )
 
         # Chain setup
-        self.question_generator = LLMChain(llm=llm_model, prompt=CONDENSE_QUESTION_PROMPT, verbose=True)
-        self.doc_chain = load_qa_with_sources_chain(
-            llm_model, chain_type="stuff", verbose=True, prompt=self.prompt
-        )
+        # self.question_generator = LLMChain(llm=llm_model, prompt=CONDENSE_QUESTION_PROMPT, verbose=True)
+        # self.doc_chain = load_qa_with_sources_chain(
+        #     llm_model, chain_type="stuff", verbose=True, prompt=self.prompt
+        # )
 
-        self.chain = ConversationalRetrievalChain(
-            retriever=self.vectorstore.as_retriever(),
-            question_generator=self.question_generator,
-            combine_docs_chain=self.doc_chain,
-            verbose=True,
-            return_generated_question=True,
-            return_source_documents=True,
-        )
+        # self.chain = ConversationalRetrievalChain(
+        #     retriever=self.vectorstore.as_retriever(),
+        #     question_generator=self.question_generator,
+        #     combine_docs_chain=self.doc_chain,
+        #     verbose=True,
+        #     return_generated_question=True,
+        #     return_source_documents=True,
+        # )
 
 
 

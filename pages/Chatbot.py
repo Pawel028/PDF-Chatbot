@@ -20,7 +20,7 @@ from Embeddings import classEmbdding
 from langchain.vectorstores.chroma import Chroma
 from Get_answers import answer_obj
 from langchain.chains.chat_vector_db.prompts import CONDENSE_QUESTION_PROMPT
-
+from pymongo import MongoClient
 load_dotenv(find_dotenv())
 
 openai.api_version = "2020-10-01"
@@ -66,16 +66,25 @@ if 'MetaData_source' not in st.session_state:
 
 
 
-emb_obj = classEmbdding(chroma_url="./Chroma", data_url="./", subfolder="Data")
-promptObj = classPrompts(prompt_file_loc="./Prompts/Prompts.xlsx")
-promptObj.def_prompt_file()
-file_list_Chroma = os.listdir(emb_obj.chroma_url)
+# emb_obj = classEmbdding(chroma_url="./Chroma", data_url="./", subfolder="Data")
+# promptObj = classPrompts(prompt_file_loc="./Prompts/Prompts.xlsx")
+# promptObj.def_prompt_file()
+# file_list_Chroma = os.listdir(emb_obj.chroma_url)
 st.title('PDF Chatbot')
 st.sidebar.header('Please select the file that you want to use')
-    
+db = os.getenv("database")
+mongodb_uri = os.getenv("mongodb_str")  # Ensure this is set in your .env file
+
+# Connect to MongoDB
+client = MongoClient(mongodb_uri)
+db1 = client[db]
+# List all collections in that database
+collections = db1.list_collection_names()
+
+file_list_Chroma = collections
 filename=st.sidebar.selectbox("Filename", file_list_Chroma)
-promptObj.search_prompt_file(filename) # creates obj.prompt_template
-promptObj.Func_Prompt() # creates obj.prompt
+# promptObj.search_prompt_file(filename) # creates obj.prompt_template
+# promptObj.Func_Prompt() # creates obj.prompt
 if filename:
     st.session_state['filename']=filename
 
@@ -84,13 +93,13 @@ if clear_chat_history:
     st.session_state['chat_history'] = [("", ""),]
 
 
-chain_type_kwargs = {"prompt": promptObj.Prompt}
+# chain_type_kwargs = {"prompt": promptObj.Prompt}
 
 
 
 user_input=st.chat_input()
-vectordb = emb_obj.find_Vectordb(st.session_state['filename'])
-Answer_obj = answer_obj(st.session_state['chat_history'], promptObj.Prompt, CONDENSE_QUESTION_PROMPT, llm_model,vectordb,st.session_state['filename'])
+# vectordb = emb_obj.find_Vectordb(st.session_state['filename'])
+Answer_obj = answer_obj(st.session_state['chat_history'], {"a":"promptObj.Prompt"}, CONDENSE_QUESTION_PROMPT, llm_model,st.session_state['filename'])
 
 
 
