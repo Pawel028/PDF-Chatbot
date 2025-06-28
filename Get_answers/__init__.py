@@ -18,8 +18,8 @@ import warnings
 warnings.filterwarnings("ignore")
 
 load_dotenv(find_dotenv())
-openai.api_key = os.getenv("openai_api_key")
-embeddings = OpenAIEmbeddings()
+openai.api_key = os.getenv("OPENAI_API_KEY")
+embeddings = OpenAIEmbeddings(openai_api_key = openai.api_key)
 
 class answer_obj:
     def __init__(self, chat_history, prompt, question_prompt, llm_model, filename):
