@@ -90,18 +90,20 @@ chain_type_kwargs = {"prompt": promptObj.Prompt}
 
 user_input=st.chat_input()
 vectordb = emb_obj.find_Vectordb(st.session_state['filename'])
-Answer_obj = answer_obj(st.session_state['chat_history'], promptObj.Prompt, CONDENSE_QUESTION_PROMPT, llm_model,vectordb)
+Answer_obj = answer_obj(st.session_state['chat_history'], promptObj.Prompt, CONDENSE_QUESTION_PROMPT, llm_model,vectordb,st.session_state['filename'])
 
 
 
 if user_input:
-    result1, chat_history,similiarity, source_vect = Answer_obj.get_ans_list(1,100,user_input,st.session_state['chat_history'])
-    response = result1[-1]
+    # result1, chat_history,similiarity, source_vect = Answer_obj.get_ans_list(1,100,user_input)
+    result1, chat_history,similiarity, source_vect = Answer_obj.find_answers(user_input)
+    
+    response = result1
     st.session_state['chat_history'] = Answer_obj.chat_history
     
-    print(st.session_state['chat_history'])
+    # print(st.session_state['chat_history'])
     st.session_state['MetaData_source'] = source_vect
-    print(st.session_state['MetaData_source'][0][0:-1])
+    # print(st.session_state['MetaData_source'][0][0:-1])
     st.session_state.past.append(user_input)
     st.session_state.generated.append(response)
     st.session_state.source.append(filename)

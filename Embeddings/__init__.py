@@ -27,6 +27,16 @@ from datetime import datetime, date
 # import fitz
 import numpy as np
 from langchain.schema import Document
+from pymongo import MongoClient
+import dotenv
+dotenv.load_dotenv()
+
+string = os.getenv("mongodb_str")
+client = MongoClient(string)  # Use your MongoDB connection string
+db = client['pdf_bot_embeddings']  # Database name
+# embedded_movies = db['embedded_movies']
+# collection = db['embedded_movies_1']
+
 
 
 class classEmbdding:
@@ -53,32 +63,39 @@ class classEmbdding:
         
         file_list_data=os.listdir(self.data_url+"/"+self.subfolder)
         for j in file_list_data:
+            collection = db[j]
             # print(j)
             loader_url = self.data_url+"/"+self.subfolder+"/"+j
             loader = PyPDFLoader(loader_url)
             document = loader.load()
 
 
-            document1 = [Document(page_content = '', metadata = {'source':'', 'page':0})]
+            # document1 = [Document(page_content = '', metadata = {'source':'', 'page':0})]
             for i in range(len(document)):
-                n_tokens = len(document[i].page_content)
-                n_tokens1=n_tokens-n_tokens%3
-                source = document[i].metadata['source']
+                dictionary = {'page_content':document[i].page_content,
+                              'embedding_vector':embeddings.embed_query(document[i].page_content),
+                              'metadata':{'source':document[i].metadata['source'], 'page':i+1}
+                }
+                collection.insert_one(dictionary)
+
+            #     n_tokens = len(document[i].page_content)
+            #     n_tokens1=n_tokens-n_tokens%3
+            #     source = document[i].metadata['source']
             
-                text1 = Document(page_content=document[i].page_content[0:int(n_tokens1/3)], metadata={'source':source, 'page':3*i},)
-                text2 = Document(page_content=document[i].page_content[int(n_tokens1/3):int(2*n_tokens1/3)], metadata={'source':source, 'page':3*i+1},)
-                text3 = Document(page_content=document[i].page_content[int(2*n_tokens1/3):int(n_tokens)], metadata={'source':source, 'page':3*i+2},)
+            #     text1 = Document(page_content=document[i].page_content[0:int(n_tokens1/3)], metadata={'source':source, 'page':i+1},)
+            #     text2 = Document(page_content=document[i].page_content[int(n_tokens1/3):int(2*n_tokens1/3)], metadata={'source':source, 'page':i+1},)
+            #     text3 = Document(page_content=document[i].page_content[int(2*n_tokens1/3):int(n_tokens)], metadata={'source':source, 'page':i+1},)
+                
+            #     document1.append(text1)
+            #     document1.append(text2)
+            #     document1.append(text3)
 
-                document1.append(text1)
-                document1.append(text2)
-                document1.append(text3)
-
-            print(j, len(document1))
-            text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
-            texts = text_splitter.split_documents(document1)
-            persist_directory=self.chroma_url+"/"+j
-            vector_db = Chroma.from_documents(texts, embeddings, persist_directory=persist_directory)
-            vector_db.persist()
+            # print(j, len(document1))
+            # text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
+            # texts = text_splitter.split_documents(document1)
+            # persist_directory=self.chroma_url+"/"+j
+            # vector_db = Chroma.from_documents(texts, embeddings, persist_directory=persist_directory)
+            # vector_db.persist()
 
     def combine_pdfs_merger(self,address,file_array,state,year):
         merger = PdfMerger()
