@@ -15,11 +15,37 @@ import pandas as pd
 import numpy as np
 from langchain.prompts import PromptTemplate
 import warnings
+from openai import OpenAI
 warnings.filterwarnings("ignore")
 
 load_dotenv(find_dotenv())
-openai.api_key = os.getenv("OPENAI_API_KEY")
-embeddings = OpenAIEmbeddings()
+# openai.api_key = os.getenv("OPENAI_API_KEY")
+# embeddings = OpenAIEmbeddings(
+#     openai_api_key=os.getenv("OPENAI_API_KEY")
+# )
+
+# client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+# embeddings = OpenAIEmbeddings(
+#     client=client
+# )
+
+# def get_embedding_client():
+#     openai_api_key = os.getenv("OPENAI_API_KEY")
+#     if not openai_api_key:
+#         raise ValueError("OPENAI_API_KEY not found in environment variables.")
+    
+#     client = OpenAI(api_key=openai_api_key)
+    
+#     embeddings = OpenAIEmbeddings(
+#         client=client
+#     )
+    
+#     return embeddings
+# embeddings = get_embedding_client()
+embeddings = OpenAIEmbeddings(
+    model="text-embedding-ada-002",
+    openai_api_key=os.getenv("OPENAI_API_KEY")
+)
 
 class answer_obj:
     def __init__(self, chat_history, prompt, question_prompt, llm_model, filename):

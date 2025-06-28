@@ -5,7 +5,8 @@ import subprocess
 import openai
 from dotenv import load_dotenv
 import tiktoken
-from langchain.document_loaders import PyPDFLoader
+from langchain_community.document_loaders.pdf import PyPDFLoader
+
 # import PyPDF2
 # from PyPDF2 import PdfMerger
 from pypdf import PdfMerger
